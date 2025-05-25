@@ -524,13 +524,17 @@ function toggleFavorite() {
     const favs = getFavorites();
     const song = playlist[currentSongIndex];
     const index = favs.findIndex(s => s.src === song.src);
+    let added;
     if (index === -1) {
         favs.push(song);
+        added = true;
     } else {
         favs.splice(index, 1);
+        added = false;
     }
     setFavorites(favs);
     updateFavoriteIcon();
+    showToast(added ? 'Added to Favorites' : 'Removed from Favorites');
 }
 
 if (favoriteBtn) {
@@ -720,6 +724,17 @@ audio.addEventListener('ended', function() {
     if (spinnerPercentage) spinnerPercentage.style.display = 'none';
 });
 
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showToast._timeout);
+    showToast._timeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 1500);
+}
+
 document.addEventListener('keydown', function(e) {
     // Only trigger shortcuts if not focused on input or textarea
     const tag = document.activeElement.tagName.toLowerCase();
@@ -744,6 +759,9 @@ document.addEventListener('keydown', function(e) {
         audio.volume = newVolume;
         volumeSlider.value = newVolume * 100;
         showVolumeValue(volumeSlider.value);
+    } else if (e.ctrlKey && e.altKey && !e.shiftKey && !e.metaKey) {
+        // Ctrl+Alt toggles like/unlike
+        toggleFavorite();
     }
 });
 

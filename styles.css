@@ -558,3 +558,25 @@ body {
     opacity: 1;
     display: block;
 }
+
+.toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.3s, bottom 0.3s;
+}
+
+.toast.show {
+    opacity: 1;
+    bottom: 60px;
+    pointer-events: auto;
+}
