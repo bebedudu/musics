@@ -535,3 +535,26 @@ body {
     text-align: center;
     padding: 1rem;
 }
+
+.song-tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: none;
+}
+
+.control-btn:hover .song-tooltip {
+    opacity: 1;
+    display: block;
+}

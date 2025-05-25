@@ -50,6 +50,8 @@ const youtubeSearchBtn = document.getElementById('youtube-search-btn');
 const playSearchedBtn = document.getElementById('play-searched-btn');
 const noResultsMessage = document.getElementById('no-results-message');
 const progressTooltip = document.querySelector('.progress-tooltip');
+const prevTooltip = document.getElementById('prev-tooltip');
+const nextTooltip = document.getElementById('next-tooltip');
 
 let isPlaying = false;
 let isPlaylistVisible = false;
@@ -814,5 +816,42 @@ if (playSearchedBtn) {
                 togglePlaylist();
             }
         }
+    });
+}
+
+function getPrevSongTitle() {
+    const list = getCurrentList();
+    if (list.length === 0) return '';
+    const currentIndex = list.findIndex(song => song.src === audio.src);
+    let prevIndex = currentIndex - 1;
+    if (prevIndex < 0) prevIndex = list.length - 1;
+    return list[prevIndex]?.title || '';
+}
+
+function getNextSongTitle() {
+    const list = getCurrentList();
+    if (list.length === 0) return '';
+    const currentIndex = list.findIndex(song => song.src === audio.src);
+    let nextIndex = currentIndex + 1;
+    if (nextIndex >= list.length) nextIndex = 0;
+    return list[nextIndex]?.title || '';
+}
+
+if (prevBtn && prevTooltip) {
+    prevBtn.addEventListener('mouseenter', () => {
+        prevTooltip.textContent = getPrevSongTitle();
+        prevTooltip.style.display = 'block';
+    });
+    prevBtn.addEventListener('mouseleave', () => {
+        prevTooltip.style.display = 'none';
+    });
+}
+if (nextBtn && nextTooltip) {
+    nextBtn.addEventListener('mouseenter', () => {
+        nextTooltip.textContent = getNextSongTitle();
+        nextTooltip.style.display = 'block';
+    });
+    nextBtn.addEventListener('mouseleave', () => {
+        nextTooltip.style.display = 'none';
     });
 }
