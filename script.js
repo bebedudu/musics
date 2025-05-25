@@ -5,8 +5,6 @@ playlist.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase(
 
 // Set originalPlaylist after sorting
 let originalPlaylist = [...playlist];
-let searchResultsPlaylist = [];
-let isPlayingFromSearch = false;
 
 // Restore last played song from localStorage
 let currentSongIndex = 0;
@@ -46,7 +44,6 @@ const bufferedPercentage = document.getElementById('buffered-percentage');
 const spinnerPercentage = document.getElementById('spinner-percentage');
 const clearSearchBtn = document.getElementById('clear-search');
 const youtubeSearchBtn = document.getElementById('youtube-search-btn');
-const playSearchedBtn = document.getElementById('play-searched-btn');
 const noResultsMessage = document.getElementById('no-results-message');
 const progressTooltip = document.querySelector('.progress-tooltip');
 
@@ -64,9 +61,6 @@ const modeIcons = [
 ];
 
 function getCurrentList() {
-    if (isPlayingFromSearch) {
-        return searchResultsPlaylist;
-    }
     if (mode === 3) {
         const favs = getFavorites();
         return favs.length > 0 ? favs : playlist;
@@ -131,18 +125,13 @@ function createPlaylist(filter = "") {
         (song.category && song.category.toLowerCase().includes(search))
     );
 
-    // Store search results
-    searchResultsPlaylist = filteredSongs;
-
     console.log('Search term:', search, 'Filtered songs count:', filteredSongs.length);
 
     if (noResultsMessage) {
         if (filteredSongs.length === 0) {
             noResultsMessage.style.display = 'block';
-            playSearchedBtn.style.display = 'none';
         } else {
             noResultsMessage.style.display = 'none';
-            playSearchedBtn.style.display = 'flex';
         }
     }
 
@@ -357,14 +346,10 @@ if (playlistSearchInput && clearSearchBtn && youtubeSearchBtn) {
         if (this.value.length > 0) {
             clearSearchBtn.style.display = 'flex';
             youtubeSearchBtn.style.display = 'flex';
-            playSearchedBtn.style.display = 'flex';
         } else {
             clearSearchBtn.style.display = 'none';
             youtubeSearchBtn.style.display = 'none';
-            playSearchedBtn.style.display = 'none';
-            isPlayingFromSearch = false;
         }
-        createPlaylist(this.value);
     });
     // Clear input and hide buttons when clicked
     clearSearchBtn.addEventListener('click', function() {
@@ -372,8 +357,6 @@ if (playlistSearchInput && clearSearchBtn && youtubeSearchBtn) {
         createPlaylist(''); // Re-render playlist with no filter
         clearSearchBtn.style.display = 'none';
         youtubeSearchBtn.style.display = 'none';
-        playSearchedBtn.style.display = 'none';
-        isPlayingFromSearch = false;
         playlistSearchInput.focus(); // Keep focus on search input
     });
 }
@@ -658,23 +641,6 @@ if (playlistSearchInput) {
         if (e.key === 'Enter') {
             searchOnYouTube();
             e.preventDefault(); // Prevent default form submission if any
-        }
-    });
-}
-
-// Add event listener for play searched button
-if (playSearchedBtn) {
-    playSearchedBtn.addEventListener('click', function() {
-        if (searchResultsPlaylist.length > 0) {
-            isPlayingFromSearch = true;
-            currentSongIndex = 0;
-            loadSongFromList(searchResultsPlaylist, currentSongIndex);
-            if (!isPlaying) {
-                togglePlay();
-            }
-            if (isPlaylistVisible) {
-                togglePlaylist();
-            }
         }
     });
 }
