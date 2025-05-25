@@ -411,6 +411,31 @@ body {
     color: #ff0000;
 }
 
+.play-searched-btn {
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.play-searched-btn:hover {
+    color: #1db954;
+}
+
+.play-searched-btn.active {
+    color: #1db954;
+    background: rgba(29, 185, 84, 0.2);
+}
+
 .clear-search-btn {
     position: absolute;
     top: 50%;

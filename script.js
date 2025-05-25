@@ -5,6 +5,9 @@ playlist.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase(
 
 // Set originalPlaylist after sorting
 let originalPlaylist = [...playlist];
+let searchResultsPlaylist = [];
+let isPlayingFromSearch = false;
+let currentPlayingIndexInList = 0; // New variable to track index in current list
 
 // Restore last played song from localStorage
 let currentSongIndex = 0;
@@ -44,6 +47,7 @@ const bufferedPercentage = document.getElementById('buffered-percentage');
 const spinnerPercentage = document.getElementById('spinner-percentage');
 const clearSearchBtn = document.getElementById('clear-search');
 const youtubeSearchBtn = document.getElementById('youtube-search-btn');
+const playSearchedBtn = document.getElementById('play-searched-btn');
 const noResultsMessage = document.getElementById('no-results-message');
 const progressTooltip = document.querySelector('.progress-tooltip');
 
@@ -61,6 +65,9 @@ const modeIcons = [
 ];
 
 function getCurrentList() {
+    if (isPlayingFromSearch) {
+        return searchResultsPlaylist;
+    }
     if (mode === 3) {
         const favs = getFavorites();
         return favs.length > 0 ? favs : playlist;
@@ -116,31 +123,46 @@ function createPlaylist(filter = "") {
     playlistItems.forEach(item => item.remove());
 
     const search = filter.trim().toLowerCase();
-    const list = getCurrentList();
-
-    const filteredSongs = list.filter(song =>
+    // When creating the UI, we always filter the *original* playlist
+    // regardless of whether we are currently playing from search results or the main playlist.
+    // The getCurrentList() is used for actual playback navigation.
+    const listForUI = playlist.filter(song =>
         !search ||
         song.title.toLowerCase().includes(search) ||
         song.artist.toLowerCase().includes(search) ||
         (song.category && song.category.toLowerCase().includes(search))
     );
 
-    console.log('Search term:', search, 'Filtered songs count:', filteredSongs.length);
+    // Store search results if a filter is applied
+    if (search) {
+        searchResultsPlaylist = listForUI;
+    } else {
+         // If no search, clear search results playlist
+        searchResultsPlaylist = [];
+    }
+
+    console.log('Search term:', search, 'Filtered songs count:', listForUI.length);
 
     if (noResultsMessage) {
-        if (filteredSongs.length === 0) {
+        if (listForUI.length === 0) {
             noResultsMessage.style.display = 'block';
         } else {
             noResultsMessage.style.display = 'none';
         }
     }
 
-    filteredSongs.forEach((song, index) => {
+    listForUI.forEach((song, index) => {
         const playlistItem = document.createElement('div');
         playlistItem.classList.add('playlist-item');
-        if (index === currentSongIndex) {
+        playlistItem.setAttribute('data-src', song.src); // Add data-src attribute
+
+        // Highlight based on the currently playing song's src
+        if (audio.src && song.src === audio.src) {
             playlistItem.classList.add('active');
+        } else {
+            playlistItem.classList.remove('active');
         }
+
         playlistItem.innerHTML = `
             <img src="${song.image}" alt="${song.title}">
             <div class="playlist-item-info">
@@ -149,16 +171,9 @@ function createPlaylist(filter = "") {
                 <span style='color:#888;font-size:0.8em;'>${song.category || ''}</span>
             </div>
         `;
+        // Update the click listener for playlist items
         playlistItem.addEventListener('click', () => {
-            currentSongIndex = index;
-            loadSongFromList(list, currentSongIndex);
-            updatePlaylistUI();
-            if (isPlaying) {
-                audio.play();
-            }
-            if (isPlaylistVisible) {
-                togglePlaylist();
-            }
+            playThisSong(song); // Call the new function with the song object
         });
         playlistContainer.appendChild(playlistItem);
     });
@@ -167,18 +182,68 @@ function createPlaylist(filter = "") {
 // Update playlist UI
 function updatePlaylistUI() {
     const playlistItems = document.querySelectorAll('.playlist-item');
-    playlistItems.forEach((item, index) => {
-        if (index === currentSongIndex) {
+    const currentPlayingSrc = audio.src;
+
+    playlistItems.forEach(item => {
+        const itemSrc = item.getAttribute('data-src');
+
+        if (itemSrc === currentPlayingSrc) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
         }
     });
+
+    // Ensure currentSongIndex is updated to reflect the index in the *main* playlist
+    // This is still needed for functions like nextSong/prevSong when not in search mode
+    const mainIndex = playlist.findIndex(song => song.src === currentPlayingSrc);
+    currentSongIndex = mainIndex !== -1 ? mainIndex : 0;
 }
 
-// Load song
-function loadSong(index) {
-    const song = playlist[index];
+// Function to play a specific song object, updating state and UI
+function playThisSong(song) {
+    const songInMainPlaylist = playlist.find(item => item.src === song.src);
+    const songInSearchResults = searchResultsPlaylist.find(item => item.src === song.src);
+
+    let targetList = playlist; // Default to main playlist
+    let targetIndex = -1; // Initialize index
+
+    // Determine which list the song belongs to and which list should be played from
+    // Prioritize playing from search results if a search is active and the song is in results
+    const playFromSearchResultsNow = playlistSearchInput.value.length > 0 && songInSearchResults;
+
+    if (playFromSearchResultsNow) {
+        targetList = searchResultsPlaylist;
+        targetIndex = searchResultsPlaylist.findIndex(item => item.src === song.src);
+        isPlayingFromSearch = true;
+        playSearchedBtn.classList.add('active');
+    } else if (songInMainPlaylist) { // Fallback to main playlist if not playing from search results but song is in main playlist
+         targetList = playlist;
+         targetIndex = playlist.findIndex(item => item.src === song.src);
+         isPlayingFromSearch = false; // Ensure we are not in main playlist mode
+         playSearchedBtn.classList.remove('active');
+    } else {
+        console.error("Attempted to play a song not found in main or search results lists:", song);
+        return; // Cannot play if song not found in any relevant list
+    }
+
+    // If song found in a list, load and play it
+    if (targetIndex !== -1) {
+        currentPlayingIndexInList = targetIndex; // Update the index in the determined list
+        loadSong(song); // Load the song object
+        if (isPlaying) {
+            audio.play();
+        }
+    }
+
+    // Close playlist after selection if it's visible
+     if (isPlaylistVisible) {
+        togglePlaylist();
+    }
+}
+
+// Load song - remains modified to accept song object
+function loadSong(song) {
     audio.src = song.src;
     songTitle.textContent = song.title;
     artistName.textContent = song.artist;
@@ -200,64 +265,116 @@ function togglePlay() {
     isPlaying = !isPlaying;
 }
 
-// Next song
+// Next song - Modified to use playThisSong
 function nextSong() {
     const list = getCurrentList();
-    if (mode === 1) { // Song loop
+    if (list.length === 0) return; // Handle empty list
+
+    if (mode === 1) {
+        // Song loop: Handled by audio 'ended' event listener already
         audio.currentTime = 0;
         audio.play();
         return;
     }
+
+    // Find the index of the currently playing song within the current list
+    const currentPlayingIndex = list.findIndex(song => song.src === audio.src);
+    let nextIndex = currentPlayingIndex;
+
     if (mode === 2) { // Shuffle
-        let nextIndex = Math.floor(Math.random() * list.length);
-        if (list.length > 1 && nextIndex === currentSongIndex) {
-            nextIndex = (nextIndex + 1) % list.length;
+        if (list.length <= 1) {
+            // Cannot shuffle a list with 0 or 1 item
+            audio.currentTime = 0; // Restart current song if song loop not active
+             if (!isPlaying) togglePlay(); // Play if paused
+            return;
         }
-        currentSongIndex = nextIndex;
-    } else { // Playlist loop or Favorites
-        currentSongIndex++;
-        if (currentSongIndex > list.length - 1) {
-            currentSongIndex = 0;
+        do {
+            nextIndex = Math.floor(Math.random() * list.length);
+        } while (nextIndex === currentPlayingIndex);
+
+    } else { // Playlist loop, Favorites, or Search
+        nextIndex++;
+        if (nextIndex > list.length - 1) {
+            nextIndex = 0; // Loop back to the beginning
         }
     }
-    loadSongFromList(list, currentSongIndex);
-    if (isPlaying) {
-        audio.play();
+
+    // If the currently playing song wasn't found in the list (e.g., list changed), start from index 0
+    if (currentPlayingIndex === -1) {
+         nextIndex = 0;
+    }
+
+    // Play the next song using playThisSong
+    if (nextIndex >= 0 && nextIndex < list.length) {
+        playThisSong(list[nextIndex]);
+    } else {
+         console.error("Calculated next index out of bounds:", nextIndex, list);
+         // Optionally, handle this error
     }
 }
 
-// Previous song
+// Previous song - Modified to use playThisSong
 function prevSong() {
     const list = getCurrentList();
-    if (mode === 1) { // Song loop
+     if (list.length === 0) return; // Handle empty list
+
+    if (mode === 1) {
+        // Song loop: Handled by audio 'ended' event listener already
         audio.currentTime = 0;
         audio.play();
         return;
     }
+
+    // Find the index of the currently playing song within the current list
+    const currentPlayingIndex = list.findIndex(song => song.src === audio.src);
+    let prevIndex = currentPlayingIndex;
+
     if (mode === 2) { // Shuffle
-        let prevIndex = Math.floor(Math.random() * list.length);
-        if (list.length > 1 && prevIndex === currentSongIndex) {
-            prevIndex = (prevIndex + 1) % list.length;
+         if (list.length <= 1) {
+            // Cannot shuffle a list with 0 or 1 item
+            audio.currentTime = 0; // Restart current song if song loop not active
+             if (!isPlaying) togglePlay(); // Play if paused
+            return;
         }
-        currentSongIndex = prevIndex;
-    } else { // Playlist loop or Favorites
-        currentSongIndex--;
-        if (currentSongIndex < 0) {
-            currentSongIndex = list.length - 1;
+         do {
+            prevIndex = Math.floor(Math.random() * list.length);
+        } while (prevIndex === currentPlayingIndex);
+    } else { // Playlist loop, Favorites, or Search
+        prevIndex--;
+        if (prevIndex < 0) {
+            prevIndex = list.length - 1; // Loop back to the end
         }
     }
-    loadSongFromList(list, currentSongIndex);
-    if (isPlaying) {
-        audio.play();
+
+    // If the currently playing song wasn't found in the list (e.g., list changed), start from index 0
+    if (currentPlayingIndex === -1) {
+         prevIndex = 0;
+    }
+
+     // Play the previous song using playThisSong
+    if (prevIndex >= 0 && prevIndex < list.length) {
+        playThisSong(list[prevIndex]);
+    } else {
+        console.error("Calculated previous index out of bounds:", prevIndex, list);
+        // Optionally, handle this error
     }
 }
 
+// loadSongFromList - Simplified to just load from a provided list and index
+// This function is primarily for internal navigation (next/prev/play searched from start)
 function loadSongFromList(list, index) {
-    const song = list[index];
-    // Find the index in the main playlist for UI highlighting
-    const mainIndex = playlist.findIndex(s => s.src === song.src);
-    currentSongIndex = mainIndex !== -1 ? mainIndex : 0;
-    loadSong(currentSongIndex);
+    if (index >= 0 && index < list.length) {
+        const song = list[index];
+        currentPlayingIndexInList = index; // Update the index in the current list
+        loadSong(song); // Load the song object
+         if (isPlaying) {
+            audio.play();
+        }
+    } else {
+        console.error("Index out of bounds for the current list:", index, list);
+        // Optionally, handle this error, e.g., stop playback or load the first song
+        // For now, we'll just log an error.
+    }
 }
 
 // Update progress bar
@@ -343,20 +460,29 @@ if (playlistSearchInput) {
 // Show/hide clear and YouTube search buttons based on input value
 if (playlistSearchInput && clearSearchBtn && youtubeSearchBtn) {
     playlistSearchInput.addEventListener('input', function() {
-        if (this.value.length > 0) {
-            clearSearchBtn.style.display = 'flex';
-            youtubeSearchBtn.style.display = 'flex';
-        } else {
-            clearSearchBtn.style.display = 'none';
-            youtubeSearchBtn.style.display = 'none';
+        const hasValue = this.value.length > 0;
+        clearSearchBtn.style.display = hasValue ? 'flex' : 'none';
+        youtubeSearchBtn.style.display = hasValue ? 'flex' : 'none';
+        playSearchedBtn.style.display = hasValue ? 'flex' : 'none';
+        
+        // Remove active state when search changes
+        if (isPlayingFromSearch) {
+            isPlayingFromSearch = false;
+            playSearchedBtn.classList.remove('active');
         }
+        
+        createPlaylist(this.value);
     });
+    
     // Clear input and hide buttons when clicked
     clearSearchBtn.addEventListener('click', function() {
         playlistSearchInput.value = '';
         createPlaylist(''); // Re-render playlist with no filter
         clearSearchBtn.style.display = 'none';
         youtubeSearchBtn.style.display = 'none';
+        playSearchedBtn.style.display = 'none';
+        isPlayingFromSearch = false;
+        playSearchedBtn.classList.remove('active');
         playlistSearchInput.focus(); // Keep focus on search input
     });
 }
@@ -406,11 +532,15 @@ if (favoriteBtn) {
     favoriteBtn.addEventListener('click', toggleFavorite);
 }
 
-// Initialize playlist and load first song
+// Initialize playlist and load first song - Modified to use playThisSong
 document.addEventListener('DOMContentLoaded', () => {
     const noResultsMessage = document.getElementById('no-results-message');
     createPlaylist();
-    loadSong(currentSongIndex);
+    // Use playThisSong to load the initial song and set initial state
+    // This will correctly set isPlayingFromSearch to false and update currentPlayingIndexInList
+    if (playlist.length > 0) {
+        playThisSong(playlist[currentSongIndex]);
+    }
     updateModeButton();
     updateFavoriteIcon();
 
@@ -515,9 +645,9 @@ audio.addEventListener('volumechange', function() {
 
 // Save last played song to localStorage when loading a song
 const oldLoadSongForStorage = loadSong;
-loadSong = function(index) {
-    oldLoadSongForStorage(index);
-    localStorage.setItem('last_played_src', playlist[index].src);
+loadSong = function(song) {
+    oldLoadSongForStorage(song);
+    localStorage.setItem('last_played_src', song.src);
     updateFavoriteIcon();
 };
 
@@ -641,6 +771,45 @@ if (playlistSearchInput) {
         if (e.key === 'Enter') {
             searchOnYouTube();
             e.preventDefault(); // Prevent default form submission if any
+        }
+    });
+}
+
+// Add event listener for play searched button
+if (playSearchedBtn) {
+    playSearchedBtn.addEventListener('click', function() {
+        // When clicking the play searched button, we explicitly want to play from search results
+        if (searchResultsPlaylist.length > 0) {
+            if (isPlayingFromSearch) {
+                // Toggle off search mode
+                isPlayingFromSearch = false;
+                playSearchedBtn.classList.remove('active');
+                // When toggling off, continue playing the current song but navigate the main playlist
+                // Find the current song in the main playlist to set correct currentSongIndex and currentPlayingIndexInList
+                const currentSongInMainPlaylist = playlist.find(song => song.src === audio.src);
+                 if (currentSongInMainPlaylist) {
+                     currentSongIndex = playlist.indexOf(currentSongInMainPlaylist);
+                 } else {
+                      // Fallback if current song not found in main playlist (shouldn't happen if logic is correct)
+                      currentSongIndex = 0;
+                 }
+                 // Update currentPlayingIndexInList to be in sync with the main playlist's index for the current song
+                 currentPlayingIndexInList = currentSongIndex;
+                 // Re-render UI with main playlist context (filtered by current search text)
+                 createPlaylist(playlistSearchInput.value);
+                 // No need to explicitly load/play, audio is already playing the correct song
+
+            } else {
+                // Toggle on search mode - start from the beginning of search results
+                isPlayingFromSearch = true;
+                playSearchedBtn.classList.add('active');
+                // Play the first song from search results
+                playThisSong(searchResultsPlaylist[0]);
+                // playThisSong handles loading and playing
+            }
+             if (isPlaylistVisible) {
+                togglePlaylist();
+            }
         }
     });
 }
