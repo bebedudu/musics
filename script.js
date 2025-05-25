@@ -123,10 +123,10 @@ function createPlaylist(filter = "") {
     playlistItems.forEach(item => item.remove());
 
     const search = filter.trim().toLowerCase();
-    // When creating the UI, we always filter the *original* playlist
-    // regardless of whether we are currently playing from search results or the main playlist.
-    // The getCurrentList() is used for actual playback navigation.
-    const listForUI = playlist.filter(song =>
+    // Use favorites list if in favorites mode, otherwise use main playlist
+    const baseList = (mode === 3) ? getFavorites() : playlist;
+
+    const listForUI = baseList.filter(song =>
         !search ||
         song.title.toLowerCase().includes(search) ||
         song.artist.toLowerCase().includes(search) ||
@@ -134,10 +134,10 @@ function createPlaylist(filter = "") {
     );
 
     // Store search results if a filter is applied
-    if (search) {
+    if (search && mode !== 3) {
         searchResultsPlaylist = listForUI;
-    } else {
-         // If no search, clear search results playlist
+    } else if (!search && mode !== 3) {
+        // If no search, clear search results playlist
         searchResultsPlaylist = [];
     }
 
@@ -489,7 +489,10 @@ if (playlistSearchInput && clearSearchBtn && youtubeSearchBtn) {
 
 // Favorite logic
 function getFavorites() {
-    return JSON.parse(localStorage.getItem('favorites') || '[]');
+    const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    // Sort alphabetically by title (case-insensitive)
+    favs.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+    return favs;
 }
 
 function setFavorites(favs) {

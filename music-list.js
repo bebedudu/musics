@@ -1,4 +1,5 @@
 const playlist = [
+    // https://hdlost.com/?q=o+aaye+tere+bhawan
     {
         title: "Sample Song 1",
         artist: "Artist 1",
@@ -314,20 +315,20 @@ const playlist = [
     //     image: "https://image.youtube.com/vi/KxCjVIFxZNo/maxresdefault.jpg",
     //     src: "https://pagalsong.com.in/uploads/systemuploads/mp3/Race%202/Lat%20Lag%20Gayee%20-%20Race%202%20128%20Kbps.mp3"
     // },
-    // {
-    //     title: "But Slowly Slowly",
-    //     artist: "Rekha Thapa",
-    //     category: "nepali hiphop",
-    //     image: "https://i.ytimage.com/vi/WgMffMxvVfs/0.jpg",
-    //     src: "https://github.com/bibekchandsah/Music/raw/main/Music/But-Slowly-Slowly.mp3"
-    // },
-    // {
-    //     title: "Kasari Bhanu",
-    //     artist: "Swoopna Suman",
-    //     category: "nepali sad",
-    //     image: "https://image.youtube.com/vi/7SaM24Cjzj0/maxresdefault.jpg",
-    //     src: "https://github.com/bibekchandsah/Music/raw/main/Music/Kasari-Bhanu.mp3"
-    // },
+    {
+        title: "But Slowly Slowly",
+        artist: "Rekha Thapa",
+        category: "nepali hiphop",
+        image: "https://picsum.photos/300/300?random=13",
+        src: "https://github.com/bibekchandsah/Music/raw/main/Music/But-Slowly-Slowly.mp3"
+    },
+    {
+        title: "Kasari Bhanu",
+        artist: "Swoopna Suman",
+        category: "nepali sad",
+        image: "https://picsum.photos/300/300?random=13",
+        src: "https://github.com/bibekchandsah/Music/raw/main/Music/Kasari-Bhanu.mp3"
+    },
     {
         title: "Maya",
         artist: "Ashutosh KC",
@@ -343,7 +344,7 @@ const playlist = [
     //     src: "https://pagalsong.com.in/uploads/systemuploads/mp3/Jai%20Maa%20Vaishno%20Devi/Dharti%20Gagan%20Mein%20Hoti%20Hai%20128%20Kbps.mp3"
     // },
     // {
-    //     title: "O Aaye Tere Bhawan",
+    //     title: "O Aaye Tere Bhawan*",
     //     artist: "Sonu Nigam, Anuradha Paudwal",
     //     category: "Hindi bhakti",
     //     image: "https://image.youtube.com/vi/l_vU6xIh9f8/maxresdefault.jpg",
@@ -371,7 +372,7 @@ const playlist = [
     //     src: "https://pagalsong.com.in/uploads/systemuploads/mp3/Jai%20Maa%20Vaishno%20Devi/Leke%20Pooja%20Ki%20Thali%20128%20Kbps.mp3"
     // },
     // {
-    //     title: "Maa Tu Mujhe Darshan De",
+    //     title: "Maa Tu Mujhe Darshan De*",
     //     artist: "Sonu Nigam, Anuradha Paudwal",
     //     category: "hindi bhakti",
     //     image: "https://image.youtube.com/vi/cLxff7epOb8/maxresdefault.jpg",
@@ -392,8 +393,8 @@ const playlist = [
     //     src: "https://pagalsong.com.in/uploads/systemuploads/mp3/Shiv%20Aaradhna/Shiv%20Shankar%20Ko%20Jisne%20Puja%20-%20Shiv%20Aaradhna%20128%20Kbps.mp3"
     // },
     // {
-    //     title: "Chalo Shiv Shankar Ke Mandi",
-    //     artist: "Sameer Sen, nuradha Paudwal",
+    //     title: "Chalo Shiv Shankar Ke Mandi*",
+    //     artist: "Sameer Sen, Anuradha Paudwal",
     //     category: "hindi bhakti",
     //     image: "https://image.youtube.com/vi/jNFlndV30no/maxresdefault.jpg",
     //     src: "https://pagalsong.com.in/uploads/systemuploads/mp3/Shiv%20Aaradhna/Chalo%20Shiv%20Shankar%20Ke%20Mandir%20Mein%20-%20Shiv%20Aaradhna%20128%20Kbps.mp3"

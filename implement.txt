@@ -1,13 +1,25 @@
 fix 
 
-if currently index number 3 music is playing and when searched the music in search bar then it show the index number 3 as playing i.e. css effect of currently playing music
+✅ if currently index number 3 music is playing and when searched the music in search bar then it show the index number 3 as playing i.e. css effect of currently playing music
 
-all favourite music is not playing only some of them are playing and show the favourite music in ascending order 
+✅ all favourite music is not playing only some of them are playing and show the favourite music in ascending order 
 
-make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order 
+when the new music is added then arrange it to ascending order in the favourite music list and make the favourite music playingin the ascending order, currently it's playing in the order of favourite music added
+
+✅ make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order 
 
 
 
 @index.html @script.js @styles.css can we make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order from the searched music list
 
 when the music is searched and played then it don't play that respetive music it plays the initially ordered music list for example if i play the 2nd music from the searched music then it's playing the second music of initially ordered music list
+
+
+
+
+features
+1) favourite music section where favourite music is only played
+2) search the music to playlist and youtube directly
+3) searched music is played with "play searched" button 
+4) remembers the last played, favourite, volume level 
+5) add the music to favourite category
