@@ -1,0 +1,11 @@
+fix 
+
+if currently index number 3 music is playing and when searched the music in search bar then it show the index number 3 as playing i.e. css effect of currently playing music
+
+all favourite music is not playing only some of them are playing and show the favourite music in ascending order 
+
+make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order 
+
+
+
+@index.html @script.js @styles.css can we make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order from the searched music list

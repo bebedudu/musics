@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="music-player">
+        <button id="search-btn" class="search-btn" title="Search">
+            <i class="fas fa-search"></i>
+        </button>
+        <button id="favorite-btn" class="favorite-btn" title="Add to Favorites">
+            <i class="far fa-heart"></i>
+        </button>
+        <div class="song-image">
+            <div id="loading-spinner" class="loading-spinner" style="display:none;">
+                <div id="spinner-percentage" class="spinner-percentage" style="display:none;">0%</div>
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <img src="https://picsum.photos/300/300" alt="Album Art" id="album-art">
+        </div>
+        <div class="song-details">
+            <h2 id="song-title">Song Title</h2>
+            <p id="artist-name">Artist Name</p>
+        </div>
+        <div class="progress-area">
+            <div class="progress-bar">
+                <div class="progress"></div>
+                <!-- <div id="buffered-percentage" class="buffered-percentage" style="display:none;">0%</div> -->
+                <div class="progress-tooltip" style="display: none;">0:00</div>
+            </div>
+            <div class="time">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="mode-toggle" class="control-btn" title="Playlist Loop">
+                <i class="fas fa-repeat"></i>
+            </button>
+            <div class="main-controls">
+                <button id="prev" class="control-btn">
+                    <i class="fas fa-backward"></i>
+                </button>
+                <button id="play-pause" class="control-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="next" class="control-btn">
+                    <i class="fas fa-forward"></i>
+                </button>
+                <button id="playlist-toggle" class="control-btn">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+        <div class="volume-container">
+            <i class="fas fa-volume-up"></i>
+            <input type="range" id="volume" min="0" max="100" value="100">
+            <div id="volume-value" class="volume-value" style="display:none;">100%</div>
+        </div>
+        <div class="playlist-container">
+            <div class="playlist-header">
+                <h3>Playlist</h3>
+                <button id="close-playlist" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="playlist-search" class="playlist-search" placeholder="Search by title, artist, category...">
+                <button id="youtube-search-btn" class="youtube-search-btn" title="Search on YouTube">
+                    <i class="fab fa-youtube"></i>
+                </button>
+                <button id="play-searched-btn" class="play-searched-btn" title="Play Searched Results">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="clear-search" class="clear-search-btn" style="display:none;">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+            </div>
+            <div class="playlist" id="playlist">
+                <div id="no-results-message" class="no-results-message" style="display:block;">
+                    Click the YouTube icon or press Enter key to search on YouTube.
+                </div>
+                <!-- Playlist items will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+    <script src="music-list.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
