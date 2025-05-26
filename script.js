@@ -173,20 +173,45 @@ function createPlaylist(filter = "") {
                 <p>${song.artist}</p>
                 <span style='color:#888;font-size:0.8em;'>${song.category || ''}</span>
             </div>
-            <button class="playlist-download-btn" title="Download" data-src="${song.src}">
-                <i class="fas fa-download"></i>
-            </button>
+            <div class="playlist-menu-container">
+                <button class="playlist-menu-btn" title="More options">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="playlist-menu-dropdown">
+                    <button class="playlist-download-option" data-src="${song.src}">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
         `;
         // Update the click listener for playlist items
         playlistItem.addEventListener('click', () => {
             playThisSong(song); // Call the new function with the song object
         });
-        // Add download button logic
-        const downloadBtn = playlistItem.querySelector('.playlist-download-btn');
-        if (downloadBtn) {
-            downloadBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent triggering the play event
-                const src = downloadBtn.getAttribute('data-src');
+        // Add menu logic
+        const menuBtn = playlistItem.querySelector('.playlist-menu-btn');
+        const menuDropdown = playlistItem.querySelector('.playlist-menu-dropdown');
+        const downloadOption = playlistItem.querySelector('.playlist-download-option');
+        if (menuBtn && menuDropdown) {
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other open menus
+                document.querySelectorAll('.playlist-menu-container.show').forEach(el => {
+                    if (el !== menuBtn.parentElement) el.classList.remove('show');
+                });
+                menuBtn.parentElement.classList.toggle('show');
+            });
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!playlistItem.contains(e.target)) {
+                    menuBtn.parentElement.classList.remove('show');
+                }
+            });
+        }
+        if (downloadOption) {
+            downloadOption.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const src = downloadOption.getAttribute('data-src');
                 const filename = song.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3';
                 const a = document.createElement('a');
                 a.href = src;
@@ -194,6 +219,8 @@ function createPlaylist(filter = "") {
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                // Optionally close the menu
+                menuBtn.parentElement.classList.remove('show');
             });
         }
         playlistContainer.appendChild(playlistItem);

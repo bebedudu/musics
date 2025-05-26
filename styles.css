@@ -608,3 +608,65 @@ body {
 .playlist-download-btn:hover {
     color: #1db954;
 }
+
+.playlist-menu-container {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+}
+
+.playlist-menu-btn {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.playlist-menu-btn:hover {
+    background: rgba(29, 185, 84, 0.1);
+    color: #1db954;
+}
+
+.playlist-menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 120%;
+    background: #222;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    min-width: 120px;
+    padding: 0.3rem 0;
+    z-index: 10;
+}
+
+.playlist-menu-container.show .playlist-menu-dropdown {
+    display: block;
+}
+
+.playlist-download-option {
+    background: none;
+    border: none;
+    color: #fff;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.playlist-download-option:hover {
+    background: #1db954;
+    color: #fff;
+}
