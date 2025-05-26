@@ -1064,3 +1064,36 @@ if (feedbackBtn) {
         window.location.href = 'mailto:bibeksha48@email.com?subject=Music%20Player%20Feedback';
     });
 }
+
+// Keyboard Shortcuts Modal
+const openShortcutsBtn = document.getElementById('open-keyboard-shortcuts');
+const shortcutsModal = document.getElementById('keyboard-shortcuts-modal');
+const closeShortcutsModalBtn = document.getElementById('close-keyboard-shortcuts-modal');
+
+// About Modal
+const openAboutBtn = document.getElementById('open-about');
+const aboutModal = document.getElementById('about-modal');
+const closeAboutModalBtn = document.getElementById('close-about-modal');
+
+function openModal(modal) {
+    if (modal) modal.classList.add('show');
+    if (modalOverlay) modalOverlay.classList.add('show');
+}
+function closeModal(modal) {
+    if (modal) modal.classList.remove('show');
+    if (modalOverlay) modalOverlay.classList.remove('show');
+}
+
+if (openShortcutsBtn && shortcutsModal) openShortcutsBtn.addEventListener('click', () => openModal(shortcutsModal));
+if (closeShortcutsModalBtn && shortcutsModal) closeShortcutsModalBtn.addEventListener('click', () => closeModal(shortcutsModal));
+
+if (openAboutBtn && aboutModal) openAboutBtn.addEventListener('click', () => openModal(aboutModal));
+if (closeAboutModalBtn && aboutModal) closeAboutModalBtn.addEventListener('click', () => closeModal(aboutModal));
+
+// Close any modal when clicking the overlay
+if (modalOverlay) {
+    modalOverlay.addEventListener('click', () => {
+        [shortcutsModal, aboutModal, sleepTimerModal].forEach(m => m && m.classList.remove('show'));
+        modalOverlay.classList.remove('show');
+    });
+}

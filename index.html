@@ -111,6 +111,8 @@
                         <button id="import-btn" class="sidebar-menu-item"><i class="fas fa-file-import"></i> Import Favorites</button>
                     </li>
                     <li><button id="feedback-btn" class="sidebar-menu-item"><i class="fas fa-comment-dots"></i> Feedback</button></li>
+                    <li><button id="open-keyboard-shortcuts" class="sidebar-menu-item"><i class="fas fa-keyboard"></i> Keyboard Shortcuts</button></li>
+                    <li><button id="open-about" class="sidebar-menu-item"><i class="fas fa-info-circle"></i> About</button></li>
                 </ul>
             </div>
         </div>
@@ -125,6 +127,51 @@
                     <input type="number" id="sleep-timer-input" min="1" max="120" step="1" value="10">
                     <button id="set-sleep-timer" class="set-timer-btn">Set Timer</button>
                     <div id="sleep-timer-status" class="sleep-timer-status"></div>
+                </div>
+            </div>
+        </div>
+        <div id="keyboard-shortcuts-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Keyboard Shortcuts</span>
+                    <button id="close-keyboard-shortcuts-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body shortcuts-modal-body">
+                    <div class="shortcuts-logo">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h2 class="shortcuts-title">Keyboard Shortcuts</h2>
+                    <ul class="shortcuts-list">
+                        <li><kbd>Space</kbd> <span>Play/Pause</span></li>
+                        <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> <span>Like/Unlike (Favorite)</span></li>
+                        <li><kbd>←</kbd> <span>Previous Song</span></li>
+                        <li><kbd>→</kbd> <span>Next Song</span></li>
+                        <li><kbd>↑</kbd> <span>Volume Up</span></li>
+                        <li><kbd>↓</kbd> <span>Volume Down</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="about-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>About</span>
+                    <button id="close-about-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body about-modal-body">
+                    <div class="about-logo">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h2 class="about-title">Music Player</h2>
+                    <div class="about-version">v1.0.0</div>
+                    <div class="about-author">Created by <b>Bibeksha</b></div>
+                    <p class="about-desc">
+                        A modern, feature-rich music player for your browser.<br>
+                        Enjoy playlists, favorites, sleep timer, and more!
+                    </p>
+                    <a href="https://github.com/bibekchandsah" target="_blank" class="about-github-btn">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
                 </div>
             </div>
         </div>

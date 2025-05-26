@@ -851,3 +851,121 @@ body {
 .sidebar-menu li {
     margin-bottom: 0.3rem;
 }
+
+.shortcuts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.shortcuts-list li {
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+}
+
+.about-modal-body {
+    text-align: center;
+    padding-top: 0.5rem;
+}
+.about-logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 0.7rem auto;
+    background: #1db954;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(29,185,84,0.15);
+}
+.about-title {
+    margin: 0.2rem 0 0.1rem 0;
+    font-size: 1.5rem;
+    color: #1db954;
+    letter-spacing: 1px;
+}
+.about-version {
+    color: #bbb;
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+}
+.about-author {
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+.about-desc {
+    color: #ccc;
+    font-size: 1.05rem;
+    margin-bottom: 1.1rem;
+}
+.about-github-btn {
+    display: inline-block;
+    background: #222;
+    color: #1db954;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1.08rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid #1db954;
+}
+.about-github-btn:hover {
+    background: #1db954;
+    color: #fff;
+}
+
+.shortcuts-modal-body {
+    text-align: center;
+    padding-top: 0.5rem;
+}
+.shortcuts-logo {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.7rem auto;
+    background: #1db954;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(29,185,84,0.15);
+}
+.shortcuts-title {
+    margin: 0.2rem 0 0.7rem 0;
+    font-size: 1.3rem;
+    color: #1db954;
+    letter-spacing: 1px;
+}
+.shortcuts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    display: inline-block;
+}
+.shortcuts-list li {
+    margin-bottom: 0.7rem;
+    font-size: 1.08rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+.shortcuts-list kbd {
+    background: #222;
+    color: #1db954;
+    border-radius: 4px;
+    padding: 0.18em 0.7em;
+    font-size: 1.05em;
+    font-family: inherit;
+    border: 1px solid #1db954;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    margin-right: 0.2em;
+    display: inline-block;
+}
+.shortcuts-list span {
+    color: #fff;
+    font-size: 1.05em;
+}

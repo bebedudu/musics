@@ -28,19 +28,19 @@ Allow users to download songs (if permitted) or share a song/playlist link.
 Recently Played
 Show a list of recently played songs for quick access
 
-Clear Cache/Reset App
+✅ Clear Cache/Reset App
 Button to clear local storage (favorites, last played, etc.) and reset the app.
 
-About/Info
+✅ About/Info
 Show app version, credits, or a link to your portfolio/GitHub.
 
-Feedback/Contact
+✅ Feedback/Contact
 Let users send feedback or bug reports (could open a mailto: link or a feedback form).
 
-Keyboard Shortcuts Reference
+✅ Keyboard Shortcuts Reference
 Show a list of available keyboard shortcuts for power users.
 
-Import/Export Playlists
+✅ Import/Export Playlists
 Let users export their favorites or playlists as a file, and import them later.
 
 first lets add the "clear cache, import/export, feedback, keyboard shortcuts reference, about" 
