@@ -79,6 +79,22 @@ const modeIcons = [
     { icon: 'fa-heart', title: 'Favorites Only' }
 ];
 
+// --- Recently Played Logic ---
+const RECENTLY_PLAYED_KEY = 'recently_played';
+const RECENTLY_PLAYED_MAX = 20;
+
+function addToRecentlyPlayed(song) {
+    if (!song || !song.src) return;
+    let recent = JSON.parse(localStorage.getItem(RECENTLY_PLAYED_KEY) || '[]');
+    // Remove if already exists
+    recent = recent.filter(s => s.src !== song.src);
+    // Add to front
+    recent.unshift(song);
+    // Limit to max
+    if (recent.length > RECENTLY_PLAYED_MAX) recent = recent.slice(0, RECENTLY_PLAYED_MAX);
+    localStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(recent));
+}
+
 function getCurrentList() {
     if (isPlayingFromSearch) {
         return searchResultsPlaylist;
@@ -311,6 +327,7 @@ function loadSong(song) {
     updatePlaylistUI();
     updateFavoriteIcon();
     localStorage.setItem('last_played_src', song.src);
+    addToRecentlyPlayed(song);
 }
 
 // Play/Pause
@@ -826,12 +843,27 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.addEventListener('click', function(e) {
-    // Check if the playlist is visible and the click is outside the playlist container and not on the toggle button
-    if (isPlaylistVisible && 
-        !playlistWrapper.contains(e.target) && 
-        e.target !== playlistToggleBtn && 
-        !playlistToggleBtn.contains(e.target)) {
+    // Close playlist container if clicking outside
+    if (
+        isPlaylistVisible &&
+        playlistWrapper &&
+        !playlistWrapper.contains(e.target) &&
+        playlistToggleBtn &&
+        e.target !== playlistToggleBtn &&
+        !playlistToggleBtn.contains(e.target)
+    ) {
         togglePlaylist();
+    }
+    // Close recently played modal if clicking outside
+    if (
+        recentlyPlayedModal &&
+        recentlyPlayedModal.classList.contains('show') &&
+        !recentlyPlayedModal.contains(e.target) &&
+        openRecentlyPlayedBtn &&
+        e.target !== openRecentlyPlayedBtn &&
+        !openRecentlyPlayedBtn.contains(e.target)
+    ) {
+        closeRecentlyPlayedModal();
     }
 });
 
@@ -1097,3 +1129,46 @@ if (modalOverlay) {
         modalOverlay.classList.remove('show');
     });
 }
+
+// --- Recently Played Modal Logic ---
+const openRecentlyPlayedBtn = document.getElementById('open-recently-played');
+const recentlyPlayedModal = document.getElementById('recently-played-modal');
+const closeRecentlyPlayedModalBtn = document.getElementById('close-recently-played-modal');
+const recentlyPlayedList = document.getElementById('recently-played-list');
+const clearRecentlyPlayedBtn = document.getElementById('clear-recently-played');
+
+function openRecentlyPlayedModal() {
+    if (!recentlyPlayedModal || !recentlyPlayedList) return;
+    // Populate the list
+    const recent = JSON.parse(localStorage.getItem(RECENTLY_PLAYED_KEY) || '[]');
+    recentlyPlayedList.innerHTML = '';
+    if (recent.length === 0) {
+        recentlyPlayedList.innerHTML = '<li style="color:#bbb;text-align:center;">No recently played songs.</li>';
+    } else {
+        recent.forEach(song => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <img src="${song.image}" alt="${song.title}">
+                <div class="song-info">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist">${song.artist}</div>
+                </div>
+            `;
+            li.addEventListener('click', () => playThisSong(song));
+            recentlyPlayedList.appendChild(li);
+        });
+    }
+    recentlyPlayedModal.classList.add('show');
+    if (modalOverlay) modalOverlay.classList.add('show');
+}
+function closeRecentlyPlayedModal() {
+    if (recentlyPlayedModal) recentlyPlayedModal.classList.remove('show');
+    if (modalOverlay) modalOverlay.classList.remove('show');
+}
+if (openRecentlyPlayedBtn) openRecentlyPlayedBtn.addEventListener('click', openRecentlyPlayedModal);
+if (closeRecentlyPlayedModalBtn) closeRecentlyPlayedModalBtn.addEventListener('click', closeRecentlyPlayedModal);
+if (clearRecentlyPlayedBtn) clearRecentlyPlayedBtn.addEventListener('click', () => {
+    localStorage.removeItem(RECENTLY_PLAYED_KEY);
+    openRecentlyPlayedModal();
+    showToast('Recently played cleared!');
+});

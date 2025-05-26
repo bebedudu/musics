@@ -104,6 +104,7 @@
             <div class="sidebar-content">
                 <ul class="sidebar-menu">
                     <li><button id="open-sleep-timer" class="sidebar-menu-item"><i class="fas fa-moon"></i> Sleep Timer</button></li>
+                    <li><button id="open-recently-played" class="sidebar-menu-item"><i class="fas fa-history"></i> Recently Played</button></li>
                     <li><button id="clear-cache-btn" class="sidebar-menu-item"><i class="fas fa-trash-alt"></i> Clear Cache</button></li>
                     <li>
                         <button id="export-btn" class="sidebar-menu-item"><i class="fas fa-file-export"></i> Export Favorites</button>
@@ -172,6 +173,18 @@
                     <a href="https://github.com/bibekchandsah" target="_blank" class="about-github-btn">
                         <i class="fab fa-github"></i> GitHub Repository
                     </a>
+                </div>
+            </div>
+        </div>
+        <div id="recently-played-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Recently Played</span>
+                    <button id="close-recently-played-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body recently-played-modal-body">
+                    <ul id="recently-played-list" class="recently-played-list"></ul>
+                    <button id="clear-recently-played" class="set-timer-btn" style="margin-top:1rem;">Clear Recently Played</button>
                 </div>
             </div>
         </div>

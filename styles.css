@@ -969,3 +969,59 @@ body {
     color: #fff;
     font-size: 1.05em;
 }
+
+.recently-played-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.recently-played-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem 0.2rem;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.recently-played-list li:hover {
+    background: #222;
+}
+.recently-played-list img {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+.recently-played-list .song-info {
+    flex: 1;
+}
+.recently-played-list .song-title {
+    color: #fff;
+    font-size: 1.05rem;
+    margin-bottom: 0.1rem;
+}
+.recently-played-list .song-artist {
+    color: #bbb;
+    font-size: 0.95rem;
+}
+
+.recently-played-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.recently-played-list::-webkit-scrollbar-track{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.recently-played-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.recently-played-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}

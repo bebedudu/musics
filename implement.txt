@@ -25,7 +25,7 @@ Let users set a timer to stop playback after a certain time.
 ✅ Download/Share
 Allow users to download songs (if permitted) or share a song/playlist link.
 
-Recently Played
+✅ Recently Played
 Show a list of recently played songs for quick access
 
 ✅ Clear Cache/Reset App
