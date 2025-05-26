@@ -52,6 +52,7 @@ const noResultsMessage = document.getElementById('no-results-message');
 const progressTooltip = document.querySelector('.progress-tooltip');
 const prevTooltip = document.getElementById('prev-tooltip');
 const nextTooltip = document.getElementById('next-tooltip');
+const downloadBtn = document.getElementById('download-btn');
 
 let isPlaying = false;
 let isPlaylistVisible = false;
@@ -172,11 +173,29 @@ function createPlaylist(filter = "") {
                 <p>${song.artist}</p>
                 <span style='color:#888;font-size:0.8em;'>${song.category || ''}</span>
             </div>
+            <button class="playlist-download-btn" title="Download" data-src="${song.src}">
+                <i class="fas fa-download"></i>
+            </button>
         `;
         // Update the click listener for playlist items
         playlistItem.addEventListener('click', () => {
             playThisSong(song); // Call the new function with the song object
         });
+        // Add download button logic
+        const downloadBtn = playlistItem.querySelector('.playlist-download-btn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent triggering the play event
+                const src = downloadBtn.getAttribute('data-src');
+                const filename = song.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3';
+                const a = document.createElement('a');
+                a.href = src;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        }
         playlistContainer.appendChild(playlistItem);
     });
 }
@@ -871,5 +890,23 @@ if (nextBtn && nextTooltip) {
     });
     nextBtn.addEventListener('mouseleave', () => {
         nextTooltip.style.display = 'none';
+    });
+}
+
+if (downloadBtn) {
+    downloadBtn.addEventListener('click', function() {
+        // Get the current song object
+        const list = getCurrentList();
+        const currentIndex = list.findIndex(song => song.src === audio.src);
+        const song = list[currentIndex] || playlist[currentSongIndex];
+        if (!song) return;
+
+        // Create a temporary link and trigger download
+        const a = document.createElement('a');
+        a.href = song.src;
+        a.download = song.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     });
 }

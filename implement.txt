@@ -25,7 +25,7 @@ Let users queue up songs to play next, in addition to the current playlist order
 Sleep Timer
 Let users set a timer to stop playback after a certain time.
 
-Download/Share
+✅ Download/Share
 Allow users to download songs (if permitted) or share a song/playlist link.
 
 
