@@ -847,3 +847,7 @@ body {
 .modal-overlay.show {
     display: block;
 }
+
+.sidebar-menu li {
+    margin-bottom: 0.3rem;
+}

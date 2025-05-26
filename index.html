@@ -104,7 +104,13 @@
             <div class="sidebar-content">
                 <ul class="sidebar-menu">
                     <li><button id="open-sleep-timer" class="sidebar-menu-item"><i class="fas fa-moon"></i> Sleep Timer</button></li>
-                    <!-- More menu items can be added here -->
+                    <li><button id="clear-cache-btn" class="sidebar-menu-item"><i class="fas fa-trash-alt"></i> Clear Cache</button></li>
+                    <li>
+                        <button id="export-btn" class="sidebar-menu-item"><i class="fas fa-file-export"></i> Export Favorites</button>
+                        <input type="file" id="import-input" style="display:none;" accept="application/json">
+                        <button id="import-btn" class="sidebar-menu-item"><i class="fas fa-file-import"></i> Import Favorites</button>
+                    </li>
+                    <li><button id="feedback-btn" class="sidebar-menu-item"><i class="fas fa-comment-dots"></i> Feedback</button></li>
                 </ul>
             </div>
         </div>

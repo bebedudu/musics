@@ -549,7 +549,9 @@ if (playlistSearchInput && clearSearchBtn && youtubeSearchBtn) {
 
 // Favorite logic
 function getFavorites() {
-    const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    // Filter out invalid items
+    favs = favs.filter(song => song && typeof song.title === 'string');
     // Sort alphabetically by title (case-insensitive)
     favs.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
     return favs;
@@ -993,5 +995,72 @@ if (setSleepTimerBtn && sleepTimerInput) {
         sleepTimerStatus.textContent = `Sleep timer set for ${minutes} minute${minutes > 1 ? 's' : ''}.`;
         sleepTimerStatus.style.color = '#1db954';
         showToast(`Sleep timer set for ${minutes} min`);
+    });
+}
+
+// Clear Cache
+const clearCacheBtn = document.getElementById('clear-cache-btn');
+if (clearCacheBtn) {
+    clearCacheBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all app data?')) {
+            // localStorage.clear();
+            localStorage.removeItem('favorites');
+            localStorage.removeItem('last_played_src');
+            localStorage.removeItem('player_volume');
+            // Add any other keys your app uses here
+            showToast('Cache cleared! Reloading...');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    });
+}
+
+// Export Favorites
+const exportBtn = document.getElementById('export-btn');
+if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+        const favorites = getFavorites();
+        const blob = new Blob([JSON.stringify(favorites, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'favorites.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Favorites exported!');
+    });
+}
+
+// Import Favorites
+const importBtn = document.getElementById('import-btn');
+const importInput = document.getElementById('import-input');
+if (importBtn && importInput) {
+    importBtn.addEventListener('click', () => importInput.click());
+    importInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                const imported = JSON.parse(evt.target.result);
+                if (Array.isArray(imported)) {
+                    setFavorites(imported);
+                    showToast('Favorites imported!');
+                    createPlaylist(); // Refresh UI
+                } else {
+                    showToast('Invalid file format.');
+                }
+            } catch {
+                showToast('Failed to import.');
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
+// Feedback
+const feedbackBtn = document.getElementById('feedback-btn');
+if (feedbackBtn) {
+    feedbackBtn.addEventListener('click', () => {
+        window.location.href = 'mailto:bibeksha48@email.com?subject=Music%20Player%20Feedback';
     });
 }
