@@ -4,7 +4,7 @@ fix
 
 ✅ all favourite music is not playing only some of them are playing and show the favourite music in ascending order 
 
-when the new music is added then arrange it to ascending order in the favourite music list and make the favourite music playingin the ascending order, currently it's playing in the order of favourite music added
+✅ when the new music is added then arrange it to ascending order in the favourite music list and make the favourite music playingin the ascending order, currently it's playing in the order of favourite music added
 
 ✅ make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order 
 
@@ -14,15 +14,12 @@ Allow users to reorder songs in the playlist
 ✅ keyboard shortcut for like/unlike i.e. ctrl+alt
 show toast notification
 
-
-@index.html @script.js @styles.css can we make it such that when search is done and clicked on "play searched" then only searched music list should be played in ascending order from the searched music list
-
-when the music is searched and played then it don't play that respetive music it plays the initially ordered music list for example if i play the 2nd music from the searched music then it's playing the second music of initially ordered music list
+✅ when the music is searched and played then it don't play that respetive music it plays the initially ordered music list for example if i play the 2nd music from the searched music then it's playing the second music of initially ordered music list
 
 Song Queue
 Let users queue up songs to play next, in addition to the current playlist order.
 
-Sleep Timer
+✅ Sleep Timer
 Let users set a timer to stop playback after a certain time.
 
 ✅ Download/Share
@@ -37,4 +34,5 @@ features
 5) add the music to favourite category
 6) separate favourite playlist
 7) show previous & next music name on hover
-8) 
+8) download the music 
+9) 

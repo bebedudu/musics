@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="music-player">
+        <button id="hamburger-btn" class="hamburger-btn" title="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
         <button id="search-btn" class="search-btn" title="Search">
             <i class="fas fa-search"></i>
         </button>
@@ -92,6 +95,35 @@
                 <!-- Playlist items will be added here dynamically -->
             </div>
         </div>
+        <!-- Sidebar for settings -->
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <span>Settings</span>
+                <button id="close-sidebar" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="sidebar-content">
+                <ul class="sidebar-menu">
+                    <li><button id="open-sleep-timer" class="sidebar-menu-item"><i class="fas fa-moon"></i> Sleep Timer</button></li>
+                    <!-- More menu items can be added here -->
+                </ul>
+            </div>
+        </div>
+        <div id="sleep-timer-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Sleep Timer</span>
+                    <button id="close-sleep-timer-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <label for="sleep-timer-input">Sleep Timer (minutes):</label>
+                    <input type="number" id="sleep-timer-input" min="1" max="120" step="1" value="10">
+                    <button id="set-sleep-timer" class="set-timer-btn">Set Timer</button>
+                    <div id="sleep-timer-status" class="sleep-timer-status"></div>
+                </div>
+            </div>
+        </div>
+        <div id="modal-overlay" class="modal-overlay"></div>
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
     </div>
     <div id="toast" class="toast"></div>
     <script src="music-list.js"></script>

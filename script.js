@@ -53,12 +53,24 @@ const progressTooltip = document.querySelector('.progress-tooltip');
 const prevTooltip = document.getElementById('prev-tooltip');
 const nextTooltip = document.getElementById('next-tooltip');
 const downloadBtn = document.getElementById('download-btn');
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const closeSidebarBtn = document.getElementById('close-sidebar');
+const setSleepTimerBtn = document.getElementById('set-sleep-timer');
+const sleepTimerInput = document.getElementById('sleep-timer-input');
+const sleepTimerStatus = document.getElementById('sleep-timer-status');
+const openSleepTimerBtn = document.getElementById('open-sleep-timer');
+const sleepTimerModal = document.getElementById('sleep-timer-modal');
+const closeSleepTimerModalBtn = document.getElementById('close-sleep-timer-modal');
+const modalOverlay = document.getElementById('modal-overlay');
 
 let isPlaying = false;
 let isPlaylistVisible = false;
 let mode = 0; // 0: playlist loop, 1: song loop, 2: shuffle, 3: favorites only
 let lastVolume = 1;
 let volumeValueTimeout;
+let sleepTimerTimeout = null;
 
 const modeIcons = [
     { icon: 'fa-repeat', title: 'Playlist Loop' },
@@ -935,5 +947,51 @@ if (downloadBtn) {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+    });
+}
+
+function openSidebar() {
+    if (sidebar) sidebar.classList.add('show');
+    if (sidebarOverlay) sidebarOverlay.classList.add('show');
+}
+function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('show');
+    if (sidebarOverlay) sidebarOverlay.classList.remove('show');
+}
+
+if (hamburgerBtn) hamburgerBtn.addEventListener('click', openSidebar);
+if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+function openSleepTimerModal() {
+    sleepTimerModal.classList.add('show');
+    modalOverlay.classList.add('show');
+}
+function closeSleepTimerModal() {
+    sleepTimerModal.classList.remove('show');
+    modalOverlay.classList.remove('show');
+}
+if (openSleepTimerBtn) openSleepTimerBtn.addEventListener('click', openSleepTimerModal);
+if (closeSleepTimerModalBtn) closeSleepTimerModalBtn.addEventListener('click', closeSleepTimerModal);
+if (modalOverlay) modalOverlay.addEventListener('click', closeSleepTimerModal);
+
+// Sleep timer logic (remains the same, but input/status/buttons are now in the modal)
+if (setSleepTimerBtn && sleepTimerInput) {
+    setSleepTimerBtn.addEventListener('click', () => {
+        const minutes = parseInt(sleepTimerInput.value, 10);
+        if (isNaN(minutes) || minutes < 1) {
+            sleepTimerStatus.textContent = 'Please enter a valid number of minutes.';
+            sleepTimerStatus.style.color = '#e25555';
+            return;
+        }
+        if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
+        sleepTimerTimeout = setTimeout(() => {
+            audio.pause();
+            showToast('Sleep timer: Playback stopped');
+            sleepTimerStatus.textContent = 'Playback stopped by sleep timer.';
+        }, minutes * 60 * 1000);
+        sleepTimerStatus.textContent = `Sleep timer set for ${minutes} minute${minutes > 1 ? 's' : ''}.`;
+        sleepTimerStatus.style.color = '#1db954';
+        showToast(`Sleep timer set for ${minutes} min`);
     });
 }

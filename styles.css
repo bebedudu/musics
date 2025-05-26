@@ -670,3 +670,180 @@ body {
     background: #1db954;
     color: #fff;
 }
+
+.hamburger-btn {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.7rem;
+    cursor: pointer;
+    z-index: 30;
+    transition: color 0.2s;
+}
+
+.hamburger-btn:hover {
+    color: #1db954;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    background: #181818;
+    color: #fff;
+    z-index: 1001;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.2);
+    transition: left 0.3s;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.sidebar.show {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid #222;
+    font-size: 1.2rem;
+}
+
+.sidebar-content {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.sidebar.show ~ .sidebar-overlay,
+.sidebar-overlay.show {
+    display: block;
+}
+
+.sleep-timer-setting label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.sleep-timer-setting input[type="number"] {
+    width: 60px;
+    padding: 0.3rem;
+    border-radius: 4px;
+    border: 1px solid #444;
+    margin-right: 0.5rem;
+    background: #222;
+    color: #fff;
+}
+
+.set-timer-btn {
+    background: #1db954;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 1rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: background 0.2s;
+}
+
+.set-timer-btn:hover {
+    background: #1ed760;
+}
+
+.sleep-timer-status {
+    margin-top: 0.7rem;
+    color: #1db954;
+    font-size: 0.95rem;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar-menu-item {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.1rem;
+    text-align: left;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    transition: background 0.2s;
+}
+.sidebar-menu-item:hover {
+    background: #222;
+    color: #1db954;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    background: none;
+}
+.modal.show {
+    display: block;
+}
+.modal-content {
+    background: #181818;
+    color: #fff;
+    border-radius: 12px;
+    min-width: 320px;
+    max-width: 90vw;
+    padding: 1.5rem 2rem 1.2rem 2rem;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+.modal-body label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.modal-body input[type="number"] {
+    width: 60px;
+    padding: 0.3rem;
+    border-radius: 4px;
+    border: 1px solid #444;
+    margin-right: 0.5rem;
+    background: #222;
+    color: #fff;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1999;
+}
+.modal.show ~ .modal-overlay,
+.modal-overlay.show {
+    display: block;
+}
