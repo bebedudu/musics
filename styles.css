@@ -650,7 +650,7 @@ body {
     display: block;
 }
 
-.playlist-download-option {
+.playlist-download-option, .playlist-queue-option {
     background: none;
     border: none;
     color: #fff;
@@ -666,7 +666,7 @@ body {
     transition: background 0.2s;
 }
 
-.playlist-download-option:hover {
+.playlist-download-option:hover, .playlist-queue-option:hover {
     background: #1db954;
     color: #fff;
 }
@@ -1024,4 +1024,42 @@ body {
 
 .recently-played-list::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.4);
+}
+
+.queue-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.queue-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem 0.2rem;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.queue-list li:hover {
+    background: #222;
+}
+.queue-list img {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+.queue-list .song-info {
+    flex: 1;
+}
+.queue-list .song-title {
+    color: #fff;
+    font-size: 1.05rem;
+    margin-bottom: 0.1rem;
+}
+.queue-list .song-artist {
+    color: #bbb;
+    font-size: 0.95rem;
 }

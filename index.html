@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Player</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <link rel="icon" href="favicon_io/favicon.ico" type="image/x-icon">
 </head>
+
 <body>
     <div class="music-player">
         <button id="hamburger-btn" class="hamburger-btn" title="Menu">
@@ -77,11 +85,13 @@
                 </button>
             </div>
             <div class="search-container">
-                <input type="text" id="playlist-search" class="playlist-search" placeholder="Search by title, artist, category...">
+                <input type="text" id="playlist-search" class="playlist-search"
+                    placeholder="Search by title, artist, category...">
                 <button id="youtube-search-btn" class="youtube-search-btn" title="Search on YouTube">
                     <i class="fab fa-youtube"></i>
                 </button>
-                <button id="play-searched-btn" class="play-searched-btn" title="Play Searched Results" style="display:none;">
+                <button id="play-searched-btn" class="play-searched-btn" title="Play Searched Results"
+                    style="display:none;">
                     <i class="fas fa-play"></i>
                 </button>
                 <button id="clear-search" class="clear-search-btn" style="display:none;">
@@ -103,17 +113,27 @@
             </div>
             <div class="sidebar-content">
                 <ul class="sidebar-menu">
-                    <li><button id="open-sleep-timer" class="sidebar-menu-item"><i class="fas fa-moon"></i> Sleep Timer</button></li>
-                    <li><button id="open-recently-played" class="sidebar-menu-item"><i class="fas fa-history"></i> Recently Played</button></li>
-                    <li><button id="clear-cache-btn" class="sidebar-menu-item"><i class="fas fa-trash-alt"></i> Clear Cache</button></li>
+                    <li><button id="open-sleep-timer" class="sidebar-menu-item"><i class="fas fa-moon"></i> Sleep
+                            Timer</button></li>
+                    <li><button id="open-recently-played" class="sidebar-menu-item"><i class="fas fa-history"></i>
+                            Recently Played</button></li>
+                    <li><button id="open-queue" class="sidebar-menu-item"><i class="fas fa-list-ol"></i> Song Queue</button></li>
+                    <li><button id="open-theme-settings" class="sidebar-menu-item"><i class="fas fa-palette"></i> Theme Settings</button></li>
+                    <li><button id="clear-cache-btn" class="sidebar-menu-item"><i class="fas fa-trash-alt"></i> Clear
+                            Cache</button></li>
                     <li>
-                        <button id="export-btn" class="sidebar-menu-item"><i class="fas fa-file-export"></i> Export Favorites</button>
+                        <button id="export-btn" class="sidebar-menu-item"><i class="fas fa-file-export"></i> Export
+                            Favorites</button>
                         <input type="file" id="import-input" style="display:none;" accept="application/json">
-                        <button id="import-btn" class="sidebar-menu-item"><i class="fas fa-file-import"></i> Import Favorites</button>
+                        <button id="import-btn" class="sidebar-menu-item"><i class="fas fa-file-import"></i> Import
+                            Favorites</button>
                     </li>
-                    <li><button id="feedback-btn" class="sidebar-menu-item"><i class="fas fa-comment-dots"></i> Feedback</button></li>
-                    <li><button id="open-keyboard-shortcuts" class="sidebar-menu-item"><i class="fas fa-keyboard"></i> Keyboard Shortcuts</button></li>
-                    <li><button id="open-about" class="sidebar-menu-item"><i class="fas fa-info-circle"></i> About</button></li>
+                    <li><button id="feedback-btn" class="sidebar-menu-item"><i class="fas fa-comment-dots"></i>
+                            Feedback</button></li>
+                    <li><button id="open-keyboard-shortcuts" class="sidebar-menu-item"><i class="fas fa-keyboard"></i>
+                            Keyboard Shortcuts</button></li>
+                    <li><button id="open-about" class="sidebar-menu-item"><i class="fas fa-info-circle"></i>
+                            About</button></li>
                 </ul>
             </div>
         </div>
@@ -184,7 +204,20 @@
                 </div>
                 <div class="modal-body recently-played-modal-body">
                     <ul id="recently-played-list" class="recently-played-list"></ul>
-                    <button id="clear-recently-played" class="set-timer-btn" style="margin-top:1rem;">Clear Recently Played</button>
+                    <button id="clear-recently-played" class="set-timer-btn" style="margin-top:1rem;">Clear Recently
+                        Played</button>
+                </div>
+            </div>
+        </div>
+        <div id="queue-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Song Queue</span>
+                    <button id="close-queue-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body queue-modal-body">
+                    <ul id="queue-list" class="queue-list"></ul>
+                    <button id="clear-queue" class="set-timer-btn" style="margin-top:1rem;">Clear Queue</button>
                 </div>
             </div>
         </div>
@@ -195,4 +228,5 @@
     <script src="music-list.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+
+</html>

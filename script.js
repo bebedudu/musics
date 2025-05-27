@@ -209,6 +209,9 @@ function createPlaylist(filter = "") {
                     <button class="playlist-download-option" data-src="${song.src}">
                         <i class="fas fa-download"></i> Download
                     </button>
+                    <button class="playlist-queue-option" data-src="${song.src}">
+                        <i class="fas fa-list-ol"></i> Add to Queue
+                    </button>
                 </div>
             </div>
         `;
@@ -220,6 +223,7 @@ function createPlaylist(filter = "") {
         const menuBtn = playlistItem.querySelector('.playlist-menu-btn');
         const menuDropdown = playlistItem.querySelector('.playlist-menu-dropdown');
         const downloadOption = playlistItem.querySelector('.playlist-download-option');
+        const queueOption = playlistItem.querySelector('.playlist-queue-option');
         if (menuBtn && menuDropdown) {
             menuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -248,6 +252,13 @@ function createPlaylist(filter = "") {
                 a.click();
                 document.body.removeChild(a);
                 // Optionally close the menu
+                menuBtn.parentElement.classList.remove('show');
+            });
+        }
+        if (queueOption) {
+            queueOption.addEventListener('click', (e) => {
+                e.stopPropagation();
+                addToQueue(song);
                 menuBtn.parentElement.classList.remove('show');
             });
         }
@@ -865,6 +876,17 @@ document.addEventListener('click', function(e) {
     ) {
         closeRecentlyPlayedModal();
     }
+    // Close queue modal if clicking outside
+    if (
+        queueModal &&
+        queueModal.classList.contains('show') &&
+        !queueModal.contains(e.target) &&
+        queueBtn &&
+        e.target !== queueBtn &&
+        !queueBtn.contains(e.target)
+    ) {
+        closeModal(queueModal);
+    }
 });
 
 function searchOnYouTube() {
@@ -1154,7 +1176,16 @@ function openRecentlyPlayedModal() {
                     <div class="song-artist">${song.artist}</div>
                 </div>
             `;
-            li.addEventListener('click', () => playThisSong(song));
+            li.addEventListener('click', () => {
+                // Remove the song from the queue before playing
+                const idxInQueue = songQueue.findIndex(s => s.src === song.src);
+                if (idxInQueue !== -1) {
+                    songQueue.splice(idxInQueue, 1);
+                    saveQueue();
+                    updateQueueUI();
+                }
+                playThisSong(song);
+            });
             recentlyPlayedList.appendChild(li);
         });
     }
@@ -1172,3 +1203,85 @@ if (clearRecentlyPlayedBtn) clearRecentlyPlayedBtn.addEventListener('click', () 
     openRecentlyPlayedModal();
     showToast('Recently played cleared!');
 });
+
+// --- Song Queue Logic ---
+let songQueue = JSON.parse(localStorage.getItem('song_queue') || '[]');
+function saveQueue() {
+    localStorage.setItem('song_queue', JSON.stringify(songQueue));
+}
+function addToQueue(song) {
+    if (!song || !song.src) return;
+    if (!songQueue.some(s => s.src === song.src)) {
+        songQueue.push(song);
+        saveQueue();
+        showToast('Added to queue');
+        updateQueueUI();
+    }
+}
+function removeFromQueue(index) {
+    songQueue.splice(index, 1);
+    saveQueue();
+    updateQueueUI();
+}
+function clearQueue() {
+    songQueue = [];
+    saveQueue();
+    updateQueueUI();
+}
+
+const queueBtn = document.getElementById('open-queue');
+const queueModal = document.getElementById('queue-modal');
+const closeQueueModalBtn = document.getElementById('close-queue-modal');
+const queueList = document.getElementById('queue-list');
+const clearQueueBtn = document.getElementById('clear-queue');
+
+function updateQueueUI() {
+    if (!queueList) return;
+    queueList.innerHTML = '';
+    if (songQueue.length === 0) {
+        queueList.innerHTML = '<li style="color:#bbb;text-align:center;">Queue is empty.</li>';
+    } else {
+        songQueue.forEach((song, idx) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <img src="${song.image}" alt="${song.title}">
+                <div class="song-info">
+                    <div class="song-title">${song.title}</div>
+                    <div class="song-artist">${song.artist}</div>
+                </div>
+                <button class="remove-queue-btn" title="Remove" data-idx="${idx}" style="background:none;border:none;color:#e25555;font-size:1.2rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+            `;
+            li.querySelector('.remove-queue-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeFromQueue(idx);
+            });
+            li.addEventListener('click', () => {
+                // Remove the song from the queue before playing
+                const idxInQueue = songQueue.findIndex(s => s.src === song.src);
+                if (idxInQueue !== -1) {
+                    songQueue.splice(idxInQueue, 1);
+                    saveQueue();
+                    updateQueueUI();
+                }
+                playThisSong(song);
+            });
+            queueList.appendChild(li);
+        });
+    }
+}
+if (queueBtn && queueModal) queueBtn.addEventListener('click', () => { updateQueueUI(); openModal(queueModal); });
+if (closeQueueModalBtn && queueModal) closeQueueModalBtn.addEventListener('click', () => closeModal(queueModal));
+if (clearQueueBtn) clearQueueBtn.addEventListener('click', () => { clearQueue(); updateQueueUI(); });
+
+// Playback logic: play from queue if not empty
+const oldNextSong = nextSong;
+nextSong = function() {
+    if (songQueue.length > 0) {
+        const next = songQueue.shift();
+        saveQueue();
+        updateQueueUI();
+        playThisSong(next);
+    } else {
+        oldNextSong();
+    }
+};
