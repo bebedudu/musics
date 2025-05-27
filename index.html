@@ -118,6 +118,7 @@
                     <li><button id="open-recently-played" class="sidebar-menu-item"><i class="fas fa-history"></i>
                             Recently Played</button></li>
                     <li><button id="open-queue" class="sidebar-menu-item"><i class="fas fa-list-ol"></i> Song Queue</button></li>
+                    <li><button id="open-effect-settings" class="sidebar-menu-item"><i class="fas fa-magic"></i> Effect</button></li>
                     <li><button id="open-theme-settings" class="sidebar-menu-item"><i class="fas fa-palette"></i> Theme Settings</button></li>
                     <li><button id="clear-cache-btn" class="sidebar-menu-item"><i class="fas fa-trash-alt"></i> Clear
                             Cache</button></li>
@@ -218,6 +219,30 @@
                 <div class="modal-body queue-modal-body">
                     <ul id="queue-list" class="queue-list"></ul>
                     <button id="clear-queue" class="set-timer-btn" style="margin-top:1rem;">Clear Queue</button>
+                </div>
+            </div>
+        </div>
+        <div id="effect-settings-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Effects</span>
+                    <button id="close-effect-settings-modal" class="close-btn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body effect-settings-modal-body">
+                    <div class="effect-toggle-row">
+                        <label for="glow-effect-toggle">Glow Effect (Ambient Mode):</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="glow-effect-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="effect-toggle-row">
+                        <label for="blur-effect-toggle">Blur Effect (Background):</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="blur-effect-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

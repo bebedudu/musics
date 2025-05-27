@@ -887,6 +887,17 @@ document.addEventListener('click', function(e) {
     ) {
         closeModal(queueModal);
     }
+    // Close effect settings modal if clicking outside
+    if (
+        effectSettingsModal &&
+        effectSettingsModal.classList.contains('show') &&
+        !effectSettingsModal.contains(e.target) &&
+        openEffectSettingsBtn &&
+        e.target !== openEffectSettingsBtn &&
+        !openEffectSettingsBtn.contains(e.target)
+    ) {
+        closeModal(effectSettingsModal);
+    }
 });
 
 function searchOnYouTube() {
@@ -1283,5 +1294,82 @@ nextSong = function() {
         playThisSong(next);
     } else {
         oldNextSong();
+    }
+};
+
+// Effect Settings Modal
+const openEffectSettingsBtn = document.getElementById('open-effect-settings');
+const effectSettingsModal = document.getElementById('effect-settings-modal');
+const closeEffectSettingsModalBtn = document.getElementById('close-effect-settings-modal');
+const glowEffectToggle = document.getElementById('glow-effect-toggle');
+const blurEffectToggle = document.getElementById('blur-effect-toggle');
+const songImage = document.querySelector('.song-image');
+const musicPlayer = document.querySelector('.music-player');
+
+if (openEffectSettingsBtn && effectSettingsModal) openEffectSettingsBtn.addEventListener('click', () => openModal(effectSettingsModal));
+if (closeEffectSettingsModalBtn && effectSettingsModal) closeEffectSettingsModalBtn.addEventListener('click', () => closeModal(effectSettingsModal));
+
+// Helper for blur background
+globalThis.blurBgDiv = globalThis.blurBgDiv || null;
+function updateBlurBg() {
+    if (!musicPlayer) return;
+    if (blurEffectToggle && blurEffectToggle.checked && albumArt && albumArt.src) {
+        if (!globalThis.blurBgDiv) {
+            globalThis.blurBgDiv = document.createElement('div');
+            globalThis.blurBgDiv.className = 'blur-bg-effect';
+            musicPlayer.insertBefore(globalThis.blurBgDiv, musicPlayer.firstChild);
+        }
+        globalThis.blurBgDiv.style.backgroundImage = `url('${albumArt.src}')`;
+        globalThis.blurBgDiv.style.display = 'block';
+    } else if (globalThis.blurBgDiv) {
+        globalThis.blurBgDiv.style.display = 'none';
+    }
+}
+
+// Glow effect toggle
+if (glowEffectToggle && songImage) {
+    glowEffectToggle.addEventListener('change', function() {
+        if (this.checked) {
+            songImage.style.setProperty('--glow-image', `url('${albumArt.src}')`);
+            songImage.classList.add('glow-effect');
+        } else {
+            songImage.classList.remove('glow-effect');
+        }
+        localStorage.setItem('glow_effect', this.checked ? '1' : '0');
+    });
+}
+
+// Blur effect toggle
+if (blurEffectToggle) {
+    blurEffectToggle.addEventListener('change', function() {
+        updateBlurBg();
+        localStorage.setItem('blur_effect', this.checked ? '1' : '0');
+    });
+}
+
+// Update effects on song/image change
+if (albumArt) {
+    albumArt.addEventListener('load', updateBlurBg);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('glow_effect') === '1' && glowEffectToggle) {
+        glowEffectToggle.checked = true;
+        if (songImage) songImage.classList.add('glow-effect');
+    }
+    if (localStorage.getItem('blur_effect') === '1' && blurEffectToggle) {
+        blurEffectToggle.checked = true;
+        updateBlurBg();
+    }
+});
+
+// Update the loadSong function to handle glow effect
+const oldLoadSong = loadSong;
+loadSong = function(song) {
+    oldLoadSong(song);
+    
+    // Update glow effect if enabled
+    if (glowEffectToggle && glowEffectToggle.checked && songImage) {
+        songImage.style.setProperty('--glow-image', `url('${song.image}')`);
     }
 };
