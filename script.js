@@ -821,10 +821,23 @@ function showToast(message, type = 'default') {
     clearTimeout(offlineToastTimeout);
 
     // Set message and type
-    toast.textContent = message;
+    toast.innerHTML = `
+        <span>${message}</span>
+        <button class="toast-close" title="Close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
     toast.className = 'toast'; // Reset classes
     toast.classList.add('show');
     toast.classList.add(type);
+
+    // Add click event listener to close button
+    const closeBtn = toast.querySelector('.toast-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            toast.classList.remove('show');
+        });
+    }
 
     // Auto-hide after delay
     showToast._timeout = setTimeout(() => {
