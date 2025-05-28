@@ -1380,7 +1380,8 @@ let touchStartY = 0;
 let touchEndX = 0;
 let touchEndY = 0;
 let lastTapTime = 0;
-let initialPinchDistance = 0;
+let longPressTimer = null;
+let longPressThreshold = 500; // 500ms for long press
 
 // Handle touch start
 document.addEventListener('touchstart', function(e) {
@@ -1396,35 +1397,29 @@ document.addEventListener('touchstart', function(e) {
     }
     lastTapTime = currentTime;
 
-    // Handle pinch start
-    if (e.touches.length === 2) {
-        initialPinchDistance = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-        );
-        lastVolume = audio.volume;
-    }
+    // Start long press timer
+    longPressTimer = setTimeout(() => {
+        showLongPressMenu(e.touches[0].clientX, e.touches[0].clientY);
+    }, longPressThreshold);
 });
 
 // Handle touch move
 document.addEventListener('touchmove', function(e) {
-    if (e.touches.length === 2) {
-        // Handle pinch gesture for volume
-        const currentDistance = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-        );
-        const pinchRatio = currentDistance / initialPinchDistance;
-        const newVolume = Math.max(0, Math.min(1, lastVolume * pinchRatio));
-        audio.volume = newVolume;
-        volumeSlider.value = newVolume * 100;
-        showVolumeValue(volumeSlider.value);
-        e.preventDefault();
+    // Cancel long press if moved
+    if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
     }
 });
 
 // Handle touch end
 document.addEventListener('touchend', function(e) {
+    // Cancel long press timer
+    if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+    }
+
     touchEndX = e.changedTouches[0].clientX;
     touchEndY = e.changedTouches[0].clientY;
     
@@ -1445,27 +1440,102 @@ document.addEventListener('touchend', function(e) {
             }
         }
     }
-    
-    // Handle vertical swipes for volume
-    if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX) && Math.abs(swipeDistanceY) > 50) {
-        const volumeChange = swipeDistanceY * -0.01; // Negative because swipe up should increase volume
-        const newVolume = Math.max(0, Math.min(1, audio.volume + volumeChange));
-        audio.volume = newVolume;
-        volumeSlider.value = newVolume * 100;
-        showVolumeValue(volumeSlider.value);
-    }
 });
 
-// Add touch feedback visual indicator
-function showTouchFeedback(x, y, type) {
-    const feedback = document.createElement('div');
-    feedback.className = 'touch-feedback';
-    feedback.style.left = `${x}px`;
-    feedback.style.top = `${y}px`;
-    feedback.innerHTML = type === 'swipe' ? '⇄' : '⏯';
-    document.body.appendChild(feedback);
+// Long press menu
+function showLongPressMenu(x, y) {
+    // Create menu container
+    const menu = document.createElement('div');
+    menu.className = 'long-press-menu';
     
-    setTimeout(() => {
-        feedback.remove();
-    }, 500);
+    // Get current song
+    const list = getCurrentList();
+    const currentIndex = list.findIndex(song => song.src === audio.src);
+    const song = list[currentIndex] || playlist[currentSongIndex];
+    
+    if (!song) return;
+
+    // Menu items
+    const menuItems = [
+        { icon: 'fa-heart', text: isCurrentSongFavorite() ? 'Remove from Favorites' : 'Add to Favorites', action: () => toggleFavorite() },
+        { icon: 'fa-list-ol', text: 'Add to Queue', action: () => addToQueue(song) },
+        { icon: 'fa-download', text: 'Download', action: () => {
+            const a = document.createElement('a');
+            a.href = song.src;
+            a.download = song.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }},
+        { icon: 'fa-share', text: 'Share', action: () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: song.title,
+                    text: `Listen to ${song.title} by ${song.artist}`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const dummy = document.createElement('input');
+                document.body.appendChild(dummy);
+                dummy.value = window.location.href;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                showToast('Link copied to clipboard!');
+            }
+        }}
+    ];
+
+    // Create menu items
+    menuItems.forEach(item => {
+        const menuItem = document.createElement('button');
+        menuItem.className = 'long-press-menu-item';
+        menuItem.innerHTML = `<i class="fas ${item.icon}"></i> ${item.text}`;
+        menuItem.addEventListener('click', () => {
+            item.action();
+            closeLongPressMenu();
+        });
+        menu.appendChild(menuItem);
+    });
+
+    // Position menu
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+
+    // Add close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'long-press-menu-close';
+    closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    closeBtn.addEventListener('click', closeLongPressMenu);
+    menu.appendChild(closeBtn);
+
+    // Add menu to document
+    document.body.appendChild(menu);
+
+    // Add overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'long-press-menu-overlay';
+    overlay.addEventListener('click', closeLongPressMenu);
+    document.body.appendChild(overlay);
+
+    // Show menu with animation
+    requestAnimationFrame(() => {
+        menu.classList.add('show');
+        overlay.classList.add('show');
+    });
+}
+
+function closeLongPressMenu() {
+    const menu = document.querySelector('.long-press-menu');
+    const overlay = document.querySelector('.long-press-menu-overlay');
+    
+    if (menu) {
+        menu.classList.remove('show');
+        setTimeout(() => menu.remove(), 300);
+    }
+    if (overlay) {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 300);
+    }
 }

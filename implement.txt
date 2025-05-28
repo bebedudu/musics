@@ -62,3 +62,5 @@ features
 
 auto upload the user music with input box from users choice 
 upload music, image, name writer, title, category
+
+add online / offline notification status 

@@ -705,7 +705,8 @@ body {
     top: 0;
     left: -320px;
     width: 300px;
-    height: 60vh;
+    min-height: 65vh;
+    max-height: 90vh;
     background: #181818;
     color: #fff;
     z-index: 1001;
@@ -1211,35 +1212,87 @@ input:focus + .toggle-slider {
     box-shadow: 0 0 1px #1db954;
 }
 
-/* Touch Feedback Styles */
-.touch-feedback {
+/* Long Press Menu Styles */
+.long-press-menu {
     position: fixed;
-    width: 60px;
-    height: 60px;
-    background: rgba(29, 185, 84, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #fff;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    animation: touchFeedback 0.5s ease-out forwards;
+    background: #181818;
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-width: 200px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
 }
 
-@keyframes touchFeedback {
-    0% {
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0;
-    }
+.long-press-menu.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.long-press-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.long-press-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.long-press-menu-item i {
+    width: 20px;
+    text-align: center;
+    color: #1db954;
+}
+
+.long-press-menu-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.long-press-menu-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.long-press-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.long-press-menu-overlay.show {
+    opacity: 1;
+}
+
+/* Remove old touch feedback styles */
+.touch-feedback {
+    display: none;
 }

@@ -1,13 +1,26 @@
 # Modern Music Player
 
-A feature-rich, modern web-based music player with a beautiful UI and advanced functionality. Built with HTML, CSS, and JavaScript.
+A feature-rich, modern web-based music player with a beautiful UI and advanced functionality. Built with HTML, CSS, and JavaScript  with touch gesture support.
 
 ## Preview
 
 ![Music Player Preview](music%20preview.jpeg)
 
-## Features
+### Touch Gestures
+- **Swipe Left/Right**: Navigate between songs
+  - Swipe left to play next song
+  - Swipe right to play previous song
 
+- **Double Tap**: Play/Pause
+  - Double tap anywhere on the player to toggle play/pause
+  
+  - **Long Press**: Context Menu
+  - Long press (500ms) anywhere on the player to show additional options:
+    - Add/Remove from Favorites
+    - Add to Queue
+    - Download
+    - Share (uses Web Share API if available)
+  
 ### Core Features
 - 🎵 Play, pause, next, previous controls
 - 📋 Playlist management with search functionality
@@ -32,14 +45,34 @@ A feature-rich, modern web-based music player with a beautiful UI and advanced f
 - 🎭 Ambient mode
 - 🎨 Customizable accent colors
 
-## Keyboard Shortcuts
+### Other Features
+- Playlist management
+- Favorites system
+- Sleep timer
+- Recently played history
+- Song queue
+- Search functionality
+- YouTube search integration
+- Keyboard shortcuts
+- Visual effects (glow and blur)
+- Volume control
+- Download support
+- Share functionality
 
-- `Space` - Play/Pause
-- `Ctrl + Alt` - Like/Unlike (Favorite)
-- `←` - Previous Song
-- `→` - Next Song
-- `↑` - Volume Up
-- `↓` - Volume Down
+## Keyboard Shortcuts
+- `Space`: Play/Pause
+- `Ctrl + Alt`: Like/Unlike (Favorite)
+- `←`: Previous Song
+- `→`: Next Song
+- `↑`: Volume Up
+- `↓`: Volume Down
+
+## Browser Support
+The player works best on modern browsers that support:
+- HTML5 Audio API
+- CSS3 Features
+- Touch Events API
+- Web Share API (for sharing functionality)
 
 ## Features in Detail
 
