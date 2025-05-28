@@ -22,9 +22,16 @@ body {
     width: 350px;
     text-align: center;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow-y: auto !important;
     position: relative;
     overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: pan-y pinch-zoom;
 }
 
 .song-image {
@@ -698,7 +705,7 @@ body {
     top: 0;
     left: -320px;
     width: 300px;
-    height: 100vh;
+    height: 60vh;
     background: #181818;
     color: #fff;
     z-index: 1001;
@@ -707,6 +714,25 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0;
+    overflow-y: auto;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .sidebar.show {
@@ -1183,4 +1209,37 @@ input:checked + .toggle-slider:before {
 
 input:focus + .toggle-slider {
     box-shadow: 0 0 1px #1db954;
+}
+
+/* Touch Feedback Styles */
+.touch-feedback {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    background: rgba(29, 185, 84, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    animation: touchFeedback 0.5s ease-out forwards;
+}
+
+@keyframes touchFeedback {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
 }

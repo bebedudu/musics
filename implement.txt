@@ -58,3 +58,7 @@ features
 8) download the music 
 9) sleep timer
 10) 
+
+
+auto upload the user music with input box from users choice 
+upload music, image, name writer, title, category

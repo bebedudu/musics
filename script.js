@@ -452,7 +452,7 @@ function prevSong() {
 // This function is primarily for internal navigation (next/prev/play searched from start)
 function loadSongFromList(list, index) {
     if (index >= 0 && index < list.length) {
-        const song = list[index];
+    const song = list[index];
         currentPlayingIndexInList = index; // Update the index in the current list
         loadSong(song); // Load the song object
          if (isPlaying) {
@@ -858,9 +858,9 @@ document.addEventListener('click', function(e) {
     if (
         isPlaylistVisible &&
         playlistWrapper &&
-        !playlistWrapper.contains(e.target) &&
+        !playlistWrapper.contains(e.target) && 
         playlistToggleBtn &&
-        e.target !== playlistToggleBtn &&
+        e.target !== playlistToggleBtn && 
         !playlistToggleBtn.contains(e.target)
     ) {
         togglePlaylist();
@@ -1373,3 +1373,99 @@ loadSong = function(song) {
         songImage.style.setProperty('--glow-image', `url('${song.image}')`);
     }
 };
+
+// Touch Gesture Support
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let lastTapTime = 0;
+let initialPinchDistance = 0;
+
+// Handle touch start
+document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    
+    // Handle double tap
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapTime;
+    if (tapLength < 300 && tapLength > 0) {
+        togglePlay(); // Double tap detected
+        e.preventDefault();
+    }
+    lastTapTime = currentTime;
+
+    // Handle pinch start
+    if (e.touches.length === 2) {
+        initialPinchDistance = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+        );
+        lastVolume = audio.volume;
+    }
+});
+
+// Handle touch move
+document.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 2) {
+        // Handle pinch gesture for volume
+        const currentDistance = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+        );
+        const pinchRatio = currentDistance / initialPinchDistance;
+        const newVolume = Math.max(0, Math.min(1, lastVolume * pinchRatio));
+        audio.volume = newVolume;
+        volumeSlider.value = newVolume * 100;
+        showVolumeValue(volumeSlider.value);
+        e.preventDefault();
+    }
+});
+
+// Handle touch end
+document.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+    
+    // Calculate swipe distance
+    const swipeDistanceX = touchEndX - touchStartX;
+    const swipeDistanceY = touchEndY - touchStartY;
+    
+    // Only process horizontal swipes if they're more horizontal than vertical
+    if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
+        // Minimum swipe distance threshold
+        if (Math.abs(swipeDistanceX) > 50) {
+            if (swipeDistanceX > 0) {
+                // Swipe right - previous song
+                prevSong();
+            } else {
+                // Swipe left - next song
+                nextSong();
+            }
+        }
+    }
+    
+    // Handle vertical swipes for volume
+    if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX) && Math.abs(swipeDistanceY) > 50) {
+        const volumeChange = swipeDistanceY * -0.01; // Negative because swipe up should increase volume
+        const newVolume = Math.max(0, Math.min(1, audio.volume + volumeChange));
+        audio.volume = newVolume;
+        volumeSlider.value = newVolume * 100;
+        showVolumeValue(volumeSlider.value);
+    }
+});
+
+// Add touch feedback visual indicator
+function showTouchFeedback(x, y, type) {
+    const feedback = document.createElement('div');
+    feedback.className = 'touch-feedback';
+    feedback.style.left = `${x}px`;
+    feedback.style.top = `${y}px`;
+    feedback.innerHTML = type === 'swipe' ? '⇄' : '⏯';
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 500);
+}
