@@ -812,15 +812,33 @@ audio.addEventListener('ended', function() {
     if (spinnerPercentage) spinnerPercentage.style.display = 'none';
 });
 
-function showToast(message) {
+function showToast(message, type = 'default') {
     const toast = document.getElementById('toast');
     if (!toast) return;
-    toast.textContent = message;
-    toast.classList.add('show');
+
+    // Clear any existing timeout
     clearTimeout(showToast._timeout);
+    clearTimeout(offlineToastTimeout);
+
+    // Set message and type
+    toast.textContent = message;
+    toast.className = 'toast'; // Reset classes
+    toast.classList.add('show');
+    toast.classList.add(type);
+
+    // Auto-hide after delay
     showToast._timeout = setTimeout(() => {
         toast.classList.remove('show');
-    }, 1500);
+    }, 3000);
+
+    // For offline message, keep showing until online
+    if (type === 'error' && !isOnline) {
+        offlineToastTimeout = setTimeout(() => {
+            if (!isOnline) {
+                showToast('You are offline', 'error');
+            }
+        }, 3000);
+    }
 }
 
 document.addEventListener('keydown', function(e) {
@@ -1539,3 +1557,29 @@ function closeLongPressMenu() {
         setTimeout(() => overlay.remove(), 300);
     }
 }
+
+// Online/Offline Status Handling
+let isOnline = navigator.onLine;
+let offlineToastTimeout = null;
+
+function handleOnlineStatus() {
+    const wasOffline = !isOnline;
+    isOnline = navigator.onLine;
+
+    if (wasOffline && isOnline) {
+        // Came back online
+        showToast('Connection restored', 'success');
+        // Refresh playlist if needed
+        createPlaylist(playlistSearchInput.value);
+    } else if (!wasOffline && !isOnline) {
+        // Went offline
+        showToast('You are offline', 'error');
+    }
+}
+
+// Add event listeners for online/offline events
+window.addEventListener('online', handleOnlineStatus);
+window.addEventListener('offline', handleOnlineStatus);
+
+// Initial check
+handleOnlineStatus();

@@ -572,6 +572,7 @@ body {
     display: block;
 }
 
+/* Toast Styles */
 .toast {
     position: fixed;
     bottom: 40px;
@@ -586,12 +587,68 @@ body {
     pointer-events: none;
     z-index: 9999;
     transition: opacity 0.3s, bottom 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .toast.show {
     opacity: 1;
     bottom: 60px;
     pointer-events: auto;
+}
+
+.toast::before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+.toast.success {
+    background: #1db954;
+}
+
+.toast.success::before {
+    content: "\f00c"; /* fa-check */
+}
+
+.toast.error {
+    background: #e25555;
+}
+
+.toast.error::before {
+    content: "\f071"; /* fa-exclamation-triangle */
+}
+
+.toast.warning {
+    background: #ffa500;
+}
+
+.toast.warning::before {
+    content: "\f071"; /* fa-exclamation-triangle */
+}
+
+.toast.info {
+    background: #2196f3;
+}
+
+.toast.info::before {
+    content: "\f05a"; /* fa-info-circle */
+}
+
+/* Toast Animation */
+@keyframes toastSlideIn {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+.toast.show {
+    animation: toastSlideIn 0.3s ease-out forwards;
 }
 
 #download-btn {
